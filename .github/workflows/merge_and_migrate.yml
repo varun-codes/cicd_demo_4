@@ -1,5 +1,9 @@
+name: Migrate to Target
+
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - main
     paths-ignore:
@@ -17,19 +21,39 @@ jobs:
   migrate_to_target:
     name: Migration to Target
     runs-on: ubuntu-latest
-    if: github.event.created == false
+    env:
+      SOURCE_HOST_URL: ${{ secrets.SOURCE_HOST_URL }}
+      SOURCE_TOKEN: ${{ secrets.SOURCE_TOKEN }}
+      TARGET_HOST_URL: ${{ secrets.TARGET_HOST_URL }}
+      TARGET_TOKEN: ${{ secrets.TARGET_TOKEN }}
+      
+    if: github.event.pull_request.merged == true
     steps:
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch || github.ref_name }}
+          ref: ${{ github.event.inputs.branch || github.event.pull_request.base.ref }}
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pipx
-          LATEST_RELEASE=$(curl -s https://api.github.com/repos/StrawHatEngineer/CICD_2/releases/latest | jq -r .tag_name)
-          pipx install https://github.com/StrawHatEngineer/CICD_2/releases/download/${LATEST_RELEASE}/cicd_aihub-${LATEST_RELEASE#v}-py3-none-any.whl
+          # Attempt to install from local file first
+          VERSION=$(ls cicd_aihub-*-py3-none-any.whl | sed 's/cicd_aihub-\(.*\)-py3-none-any.whl/\1/' | head -n 1)
+
+          if [ -n "$VERSION" ]; then
+            echo "Found local .whl file: cicd_aihub-${VERSION}-py3-none-any.whl"
+            pipx install cicd_aihub-${VERSION}-py3-none-any.whl
+          else
+            echo "No local .whl file found. Attempting to install from GitHub release."
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/instabase/aihub-apps-ci-cd-workflows/releases/latest | jq -r .tag_name)
+            VERSION=$(echo $LATEST_RELEASE | sed 's/^v//')
+            
+            if ! pipx install https://github.com/instabase/aihub-apps-ci-cd-workflows/releases/download/${LATEST_RELEASE}/cicd_aihub-${VERSION}-py3-none-any.whl; then
+              echo "Failed to install from GitHub release after failing to find local .whl file. Aborting."
+              exit 1
+            fi
+          fi
 
       - name: Validate config.json
         run: |
