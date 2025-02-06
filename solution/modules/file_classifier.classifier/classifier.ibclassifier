@@ -1,0 +1,12 @@
+{
+  "classifier_text": "",
+  "scripts_dir": "scripts",
+  "type": "ib:custom-classifier",
+  "version": "1.1",
+  "class_mapping_to_raw_files": null,
+  "model_size": 0,
+  "preprocess_settings": null,
+  "rootPath": "Sonic-POV/Invoice-POV/fs/sonicpov/pramod_sandbox/solution/flows",
+  "preprocess_output_folder": null,
+  "class_mapping_to_training_files": null
+}
