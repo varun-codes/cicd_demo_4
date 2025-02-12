@@ -1,0 +1,23 @@
+{
+    "appReleaseVersion": "25.02",
+    "author": "rahul.nanwani",
+    "createdAtMs": "1738827742000",
+    "description": "No release notes",
+    "id": "8b5bee82-2f8b-447b-9ca3-04a28bf94e17",
+    "isCustomizable": false,
+    "linkSharingMode": "OFF",
+    "metadata": "{\"authors\":[\"rahul.nanwani\"],\"billing_model\":\"default\",\"has_project_snapshot\":true,\"icon\":\"icon.png\",\"org_context_type\":\"ENTERPRISE\",\"project_id\":\"01937664-649c-79b8-9347-17870e4835fe\",\"results\":\"\",\"samples\":\"output/s1_process_files\",\"schema\":\"schema.json\"}",
+    "name": "UK Medical Report - POC",
+    "owner": "rahul.nanwani",
+    "sharedAccounts": [
+        "ib-internal"
+    ],
+    "solutionType": "EXTRACTION",
+    "solution_path": "system/global/fs/Instabase Drive/Applications/Deployed/All/8b5bee82-2f8b-447b-9ca3-04a28bf94e17",
+    "state": "PRODUCTION",
+    "summary": "No summary",
+    "updateMode": "UPDATE_WHEN_EXPIRED",
+    "updatedAtMs": "1738827756000",
+    "version": "0.2.63",
+    "visibility": "PRIVATE"
+}
