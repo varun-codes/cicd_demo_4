@@ -1,0 +1,25 @@
+{
+  "source": {
+    "is_advanced": false,
+    "project_id": "0194a79d-bbcd-79de-ad84-56cf154b91df",
+    "flow_path": "",
+    "sb_name": "",
+    "flow_name": "",
+    "org": "SolEng",
+    "workspace": "CI-CD",
+    "app_id": "f0b8d271-312e-47fd-8b05-c098e7a6001c",
+    "deployment_id": "",
+    "dependencies": [""]
+  },
+  "target": {
+    "org": "<https://aihub-uat.internal.instabase.com/>",
+    "workspace": "<test_user>"
+  },
+  "settings": {
+    "rebuild": false
+  },
+  "testing": {
+    "regression": {}
+  },
+  "release_notes": "Checking the migration is done or not"
+}
