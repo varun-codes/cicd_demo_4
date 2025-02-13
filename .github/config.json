@@ -1,0 +1,25 @@
+{
+  "source": {
+    "is_advanced": true,
+    "project_id": "",
+    "flow_path": "",
+    "sb_name": "DL_App",
+    "flow_name": "DL_Flow",
+    "org": "SolEng",
+    "workspace": "CI-CD",
+    "app_id": "5c9f81d7-e596-43a1-bf60-25783256821a",
+    "deployment_id": "",
+    "dependencies": [""]
+  },
+  "target": {
+    "org": "aihub-uat-internal",
+    "workspace": "CICD_Testing"
+  },
+  "settings": {
+    "rebuild": false
+  },
+  "testing": {
+    "regression": {}
+  },
+  "release_notes": "Checking the build and project is done or not"
+}
