@@ -1,0 +1,25 @@
+{
+  "source": {
+    "is_advanced": true,
+    "project_id": "",
+    "flow_path": "",
+    "sb_name": "DL_App",
+    "flow_name": "DL_Flow",
+    "org": "SolEng",
+    "workspace": "CI-CD",
+    "app_id": "a56eb7e0-657d-497d-8c32-0c41d6314554",
+    "deployment_id": "",
+    "dependencies": [""]
+  },
+  "target": {
+    "org": "aihub-uat-internal",
+    "workspace": "CICD_Testing"
+  },
+  "settings": {
+    "rebuild": false
+  },
+  "testing": {
+    "regression": {}
+  },
+  "release_notes": "The Checking a migration is done"
+}
