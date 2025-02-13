@@ -1,0 +1,23 @@
+{
+    "appReleaseVersion": "24.50",
+    "author": "rakshit.basotra_instabase.com",
+    "createdAtMs": "1739432044000",
+    "description": "No release notes",
+    "id": "5c9f81d7-e596-43a1-bf60-25783256821a",
+    "isCustomizable": false,
+    "linkSharingMode": "OFF",
+    "metadata": "{\"authors\": [\"rakshit.basotra_instabase.com\"], \"icon\": \"icon.png\", \"samples\": \"\", \"results\": \"\", \"schema\": \"schema.json\", \"is_advanced\": true, \"billing_model\": \"default\"}",
+    "name": "DL",
+    "owner": "instabase",
+    "sharedAccounts": [
+        "SolEng"
+    ],
+    "solutionType": "EXTRACTION",
+    "solution_path": "system/global/fs/Instabase Drive/Applications/Deployed/All/5c9f81d7-e596-43a1-bf60-25783256821a",
+    "state": "PRODUCTION",
+    "summary": "No summary",
+    "updateMode": "UPDATE_WHEN_EXPIRED",
+    "updatedAtMs": "1739432048000",
+    "version": "0.0.1",
+    "visibility": "PRIVATE"
+}
