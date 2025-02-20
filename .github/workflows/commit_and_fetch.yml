@@ -61,7 +61,7 @@ jobs:
           elif [ "$IS_ADVANCED" = "true" ] && [ -n "$SB_NAME" ] && [ "$SB_NAME" != "null" ]; then
             promote-sb-solution --compile_solution --download_solution
           elif [ "$IS_ADVANCED" = "false" ] && [ -n "$PROJECT_ID" ] && [ "$PROJECT_ID" != "null" ]; then
-            promote-build-solution --compile_solution --download_binary
+            promote-build-solution --compile_solution --download_solution
           else
             echo "Error: not a valid config.json"
             exit 1

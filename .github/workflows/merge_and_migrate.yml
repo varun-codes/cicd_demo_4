@@ -97,5 +97,5 @@ jobs:
           elif [ "$IS_ADVANCED" = "true" ] && [ -n "$SB_NAME" ] && [ "$SB_NAME" != "null" ]; then
             promote-sb-solution --promote_solution_to_target --publish_advanced_app $DEPLOY_FLAG $DEPS_FLAG
           else
-            promote-build-solution --upload_binary --publish_advanced_app $DEPLOY_FLAG $REBUILD_FLAG
+            promote-build-solution --publish_build_app $DEPLOY_FLAG $REBUILD_FLAG
           fi
