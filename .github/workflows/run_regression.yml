@@ -1,0 +1,29 @@
+name: Run Regression
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_url:
+        description: "URL of the regression GitHub repository"
+        required: true
+      branch:
+        description: "Branch to download"
+        required: true
+        default: "main"
+
+jobs:
+  download_and_run_regression:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download regression repo ZIP
+        run: |
+          REPO_URL=""
+          BRANCH="${{ github.event.inputs.branch }}"
+          ZIP_URL="${REPO_URL}/archive/refs/heads/${BRANCH}.zip"
+          curl -L -o regression.zip "$ZIP_URL"
+          unzip regression.zip -d regression
+
+      - name: Run regression
+        run: |
+          cd regression/*
+          ./run_regression --regression 
