@@ -50,7 +50,7 @@ jobs:
             VERSION=$(echo $LATEST_RELEASE | sed 's/^v//')
             
             if ! pipx install https://github.com/instabase/aihub-apps-ci-cd-workflows/releases/download/${LATEST_RELEASE}/cicd_aihub-${VERSION}-py3-none-any.whl; then
-              echo "Failed to install from GitHub release after failing to find local .whl file. Aborting."
+              echo "Failed to install from GitHub release. Aborting."
               exit 1
             fi
           fi
@@ -68,36 +68,58 @@ jobs:
             exit 1
           fi
 
-      - name: Migrate app to Target
+      - name: Create or Upload Project
+        id: create_project_step
         run: |
           IS_ADVANCED=$(jq -r '.source.is_advanced' config.json)
           SB_NAME=$(jq -r '.source.sb_name' config.json)
           FLOW_PATH=$(jq -r '.source.flow_path' config.json)
-          DEPLOYMENT_ID=$(jq -r '.source.deployment_id' config.json)
           DEPENDENCIES=$(jq -r '.source.dependencies' config.json)
-          REBUILD=$(jq -r '.settings.rebuild' config.json)
-
-          DEPLOY_FLAG=""
-          if [ -n "$DEPLOYMENT_ID" ] && [ "$DEPLOYMENT_ID" != "null" ]; then
-            DEPLOY_FLAG="--create_deployment"
-          fi
-
           DEPS_FLAG=""
           if [ -n "$DEPENDENCIES" ] && [ "$DEPENDENCIES" != "null" ]; then
             DEPS_FLAG="--upload_dependencies"
           fi
+          if [ "$IS_ADVANCED" = "true" ] && [ -n "$FLOW_PATH" ] && [ "$FLOW_PATH" != "null" ]; then
+            promote-solution --promote_solution_to_target $DEPS_FLAG
+          elif [ "$IS_ADVANCED" = "true" ] && [ -n "$SB_NAME" ] && [ "$SB_NAME" != "null" ]; then
+            promote-sb-solution --promote_solution_to_target $DEPS_FLAG
+          else
+            promote-build-solution --create_build_project
+          fi
 
+      - name: Create App
+        id: create_app_step
+        run: |
+          IS_ADVANCED=$(jq -r '.source.is_advanced' config.json)
+          SB_NAME=$(jq -r '.source.sb_name' config.json)
+          FLOW_PATH=$(jq -r '.source.flow_path' config.json)
+          REBUILD=$(jq -r '.settings.rebuild' config.json)
           REBUILD_FLAG=""
           if [ "$REBUILD" = "true" ]; then
             REBUILD_FLAG="--rebuild"
           fi
-
           if [ "$IS_ADVANCED" = "true" ] && [ -n "$FLOW_PATH" ] && [ "$FLOW_PATH" != "null" ]; then
-            promote-solution --promote_solution_to_target --publish_advanced_app $DEPLOY_FLAG $DEPS_FLAG
+            promote-solution --publish_advanced_app  
           elif [ "$IS_ADVANCED" = "true" ] && [ -n "$SB_NAME" ] && [ "$SB_NAME" != "null" ]; then
-            promote-sb-solution --promote_solution_to_target --publish_advanced_app $DEPLOY_FLAG $DEPS_FLAG
+            promote-sb-solution --publish_advanced_app
           else
-            promote-build-solution --publish_build_app $DEPLOY_FLAG $REBUILD_FLAG
+            promote-build-solution --publish_build_app $REBUILD_FLAG
+          fi
+
+      - name: Create Deployment
+        id: create_deployment_step
+        run: |
+          DEPLOYMENT_ID=$(jq -r '.source.deployment_id' config.json)
+          DEPLOY_FLAG=""
+          if [ -n "$DEPLOYMENT_ID" ] && [ "$DEPLOYMENT_ID" != "null" ]; then
+            DEPLOY_FLAG="--create_deployment"
+          fi
+          if [ "$IS_ADVANCED" = "true" ] && [ -n "$FLOW_PATH" ] && [ "$FLOW_PATH" != "null" ]; then
+            promote-solution $DEPLOY_FLAG
+          elif [ "$IS_ADVANCED" = "true" ] && [ -n "$SB_NAME" ] && [ "$SB_NAME" != "null" ]; then
+            promote-sb-solution $DEPLOY_FLAG
+          else
+            promote-build-solution $DEPLOY_FLAG
           fi
 
       - name: Create or Update Tag for Release
@@ -108,3 +130,21 @@ jobs:
           APP_RELEASE_VERSION=$(jq -r '.version' app_details.json)
           git tag -f -a "v${APP_RELEASE_VERSION}" -m "Release version ${APP_RELEASE_VERSION}"
           git push origin "v${APP_RELEASE_VERSION}" --force
+
+      - name: Rollback to Previous Version
+        if: failure() && steps.create_app_step.outcome == 'failure'
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
+          echo "Latest tag found: $LATEST_TAG"
+          if [ -z "$LATEST_TAG" ]; then
+              echo "No previous version found. Deleting build..."
+              promote-build-solution --delete_build
+          else
+              echo "Reverting to latest version: $LATEST_TAG"
+              curl -L -o latest_release.zip "https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${LATEST_TAG}.zip"
+              unzip -o latest_release.zip
+              EXTRACTED_FOLDER=$(ls -d ${GITHUB_REPOSITORY##*/}-*/ | head -n 1)
+              cd "$EXTRACTED_FOLDER"
+              promote-build-solution --create_build_project
+          fi
