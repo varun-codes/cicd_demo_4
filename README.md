@@ -10,10 +10,7 @@ The CI/CD workflows streamline the deployment of AI Hub applications across diff
 ### 1. Prerequisites
 Before you begin, ensure you have the following:
 
-- Tokens for both the source and target Instabase environments with the following access:
-  - `manage_aihub` (Site permission / Manage AI Hub)
-  - `manage_marketplace_apps` (App permission / Marketplace Admin)
-  - `write_fs_aihub` (Site permission / Write Any Files to AI Hub Filesystem)
+- Tokens for both the source and target Instabase environments with the access to the app and project.
 - Access to the Instabase public repository `aihub-apps-ci-cd-workflows`.
   - If you have access, you can clone the repository directly.
   - If you do not have access, you need to manually add the workflows and `.whl` files to your repository. You can obtain these files by raising a Zendesk ticket.
@@ -65,9 +62,7 @@ To enable the CI/CD workflow, configure the following secrets in your GitHub rep
   "settings": {
     "rebuild": true/false
   },
-  "testing": {
-    "regression": {}
-  },
+   "regression": {},
   "release_notes": "<Release Notes>"
 }
 ```
@@ -126,8 +121,6 @@ Modify the `config.json` file with your project details.
 1. Once your app is ready for migration, merge the feature branch into the `main` branch by creating a pull request (PR).
 2. Upon merging the PR, the CI/CD workflow will be triggered, and the app will be migrated to the target environment.
 
-⚠️ **Important:** The app will be migrated to the target environment based on the details in the feature branch, not the source environment. So, ensure the feature branch contains the latest project details before migration.
-
 ---
 
 ## Sample Configuration File
@@ -153,9 +146,7 @@ Modify the `config.json` file with your project details.
     "settings": {
         "rebuild": false
     },
-    "testing": {
-        "regression": {}
-    },
+    "regression": {},
     "release_notes": "Initial release v0.0.1 - changed some prompts"
 }
 ```

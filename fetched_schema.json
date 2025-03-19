@@ -1,0 +1,272 @@
+{
+    "28922": {
+        "description": "default Passport Document class",
+        "fields": {
+            "258315": {
+                "data_type": "TEXT",
+                "description": "You are expert in document processing with a focus on extracting critical information from passports. Your task is to extract the value associated with \"Date of Issue\" in the format present in the document as it is which specifies when the passport was officially issued.\nNote :\n1) Do not consider \"Date of Issue\" from old passport number.\n2) Ignore any variations such as \"Issue date\", \"Date Issue\", \"RP Issue date\" etc.\n3) If the \"Date of issue\" cannot be found, return N/A.",
+                "lines": [
+                    {
+                        "function_args": [
+                            {
+                                "data_type": "LINE",
+                                "name": "previous_line",
+                                "value": "Date Of Issue@0"
+                            }
+                        ],
+                        "function_id": 3817,
+                        "line_type": "UDF",
+                        "native_fn_name": null,
+                        "prompt": null
+                    },
+                    {
+                        "function_args": [],
+                        "function_id": null,
+                        "line_type": "PROMPT",
+                        "native_fn_name": null,
+                        "prompt": "Step-1 : If the extracted value is 'N/A' or empty, return 'N/A'.\n\nStep-2 : If the extracted value does not contain 3 parts, then return the extracted value as it is.\n\nStep-3 : Otherwise, Maintain the extracted date format as it is, but just convert the month (second part in the extracted date) to English format.\n\nStep-4 : Make sure the month(second part in the date) appears only once in the extracted date.\n\nLet's think step by step"
+                    },
+                    {
+                        "function_args": [
+                            {
+                                "data_type": "TEXT",
+                                "name": "input__format",
+                                "value": "\"\""
+                            },
+                            {
+                                "data_type": "TEXT",
+                                "name": "output__format",
+                                "value": "\"mmddyyyy\""
+                            }
+                        ],
+                        "function_id": null,
+                        "line_type": "NATIVE",
+                        "native_fn_name": "format_date",
+                        "prompt": null
+                    }
+                ],
+                "model_type": "ADVANCED",
+                "name": "Date Of Issue",
+                "position": 9,
+                "prompt": "Date Of Issue",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "258316": {
+                "data_type": "TEXT",
+                "description": "Your task is to only look for the keyword \"Date of Expiry\" within the document. Extract the date in the same format as it appears next to or near this phrase. \n\nNote :\n1) Ignore any variations like 'RP expiry date' or other similar terms.\n2) If the 'Date of Expiry' cannot be found, return 'N/A'.",
+                "lines": [
+                    {
+                        "function_args": [
+                            {
+                                "data_type": "LINE",
+                                "name": "previous_line",
+                                "value": "Date Of Expiry@0"
+                            }
+                        ],
+                        "function_id": 3818,
+                        "line_type": "UDF",
+                        "native_fn_name": null,
+                        "prompt": null
+                    },
+                    {
+                        "function_args": [],
+                        "function_id": null,
+                        "line_type": "PROMPT",
+                        "native_fn_name": null,
+                        "prompt": "Step-1 : If the extracted value is 'N/A' or empty, return 'N/A'.\n\nStep-2 : If the extracted value does not contain 3 parts, then return the extracted value as it is.\n\nStep-3 : Otherwise, Maintain the extracted date format as it is, but just convert the month (second part in the extracted date) to English format.\n\nStep-4 : Make sure the month(second part in the date) appears only once in the extracted date.\n\nLet's think step by step"
+                    },
+                    {
+                        "function_args": [
+                            {
+                                "data_type": "TEXT",
+                                "name": "input__format",
+                                "value": "\"\""
+                            },
+                            {
+                                "data_type": "TEXT",
+                                "name": "output__format",
+                                "value": "\"mmddyyyy\""
+                            }
+                        ],
+                        "function_id": null,
+                        "line_type": "NATIVE",
+                        "native_fn_name": "format_date",
+                        "prompt": null
+                    }
+                ],
+                "model_type": "ADVANCED",
+                "name": "Date Of Expiry",
+                "position": 10,
+                "prompt": "Date Of Expiry",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "258317": {
+                "data_type": "TEXT",
+                "description": "You are expert in document processing with a focus on extracting critical information from passports. Your task is to extract the complete value for 'Place of Birth' in the format as it is and just return the value associated without any extra text.  \n\nSometimes alphabetical value for 'Place of birth' will appear after the gender(Male-M / Female-F) on passport. \n\nIf 'Place of Birth' is not found, return 'N/A.'",
+                "lines": [
+                    {
+                        "function_args": [
+                            {
+                                "data_type": "LINE",
+                                "name": "previous_line",
+                                "value": "Place Of Birth@0"
+                            }
+                        ],
+                        "function_id": 3820,
+                        "line_type": "UDF",
+                        "native_fn_name": null,
+                        "prompt": null
+                    }
+                ],
+                "model_type": "ADVANCED",
+                "name": "Place Of Birth",
+                "position": 11,
+                "prompt": "You are expert in document processing with a focus on extracting critical information from passports. Your task is to extract the complete value for 'Place of Birth' in the format as it is and just return the value associated without any extra text.  \n\nSometimes alphabetical value for 'Place of birth' will appear after the gender(Male-M / Female-F) on passport. \n\nIf 'Place of Birth' is not found, return 'N/A.'",
+                "prompt_schema": null,
+                "prompt_type": "advanced"
+            },
+            "258318": {
+                "data_type": "TEXT",
+                "description": "You are expert in document processing with a focus on extracting critical information from passports.\n\nYour task is to extract the complete value for 'Issuing Authority' from the passport which is near to \"Date Of Issue\" as it is which specifies who issued the Passport.\n\nPlease make sure you should not extract the value under \"Place Of Issue\" or \"Issuing Office\" or \"Office\".\n\nNote :  If it is not found, return 'N/A'.",
+                "lines": [
+                    {
+                        "function_args": [
+                            {
+                                "data_type": "LINE",
+                                "name": "previous_line",
+                                "value": "Issuing Authority@0"
+                            }
+                        ],
+                        "function_id": 3821,
+                        "line_type": "UDF",
+                        "native_fn_name": null,
+                        "prompt": null
+                    }
+                ],
+                "model_type": "ADVANCED",
+                "name": "Issuing Authority",
+                "position": 12,
+                "prompt": "Issuing Authority",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "65794": {
+                "data_type": "TEXT",
+                "description": "Return the \"first name\" or \"given names\" of the person for whom the passport is issued. Include \"middle name\" from middle name column if exists, it is mentioned below given name. Given name may or may not include two or more names. If it is in a single line the \"last\" word is the surname or mentioned below it.",
+                "lines": [],
+                "model_type": "DEFAULT",
+                "name": "Given Name",
+                "position": 2,
+                "prompt": "Given Name",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "65795": {
+                "data_type": "TEXT",
+                "description": "Mostly surname is mentioned above given name. If it is in a single line the \"last\" word is the surname or mentioned below it. It can include two or more words.",
+                "lines": [],
+                "model_type": "DEFAULT",
+                "name": "Surname",
+                "position": 4,
+                "prompt": "Surname",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "65796": {
+                "data_type": "TEXT",
+                "description": "string return date of birth in mm/dd/yyyy format",
+                "lines": [],
+                "model_type": "DEFAULT",
+                "name": "Date Of Birth",
+                "position": 3,
+                "prompt": "Date Of Birth",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "65798": {
+                "data_type": "TEXT",
+                "description": "return the nationality of person whose passport this is. the data under the column \"Nationality\". the data column will after \"name\"",
+                "lines": [],
+                "model_type": "DEFAULT",
+                "name": "Nationality",
+                "position": 6,
+                "prompt": "Nationality",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "65800": {
+                "data_type": "TEXT",
+                "description": "The data under the column \"Passport Number\". The data will be always include alphabet and numbers. It will never be more than 9 characters and will never include special character.",
+                "lines": [],
+                "model_type": "DEFAULT",
+                "name": "Passport Number",
+                "position": 0,
+                "prompt": "Passport Number",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "65801": {
+                "data_type": "TEXT",
+                "description": "given under the column of \"gender\" or \"sex\" and options are \"M\" or \"F\"",
+                "lines": [],
+                "model_type": "DEFAULT",
+                "name": "Gender",
+                "position": 5,
+                "prompt": "Gender",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "65802": {
+                "data_type": "TEXT",
+                "description": "Passport type of the passport and return P if nothing is mentioned, usually mentioned under \"type\".",
+                "lines": [],
+                "model_type": "DEFAULT",
+                "name": "Passport Type",
+                "position": 1,
+                "prompt": "Passport Type",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "65804": {
+                "data_type": "TEXT",
+                "description": "string return the country that issued the passport. The data is against the column \"country code\". The data will have 3 english alphabet only.",
+                "lines": [],
+                "model_type": "DEFAULT",
+                "name": "Issuing Country",
+                "position": 7,
+                "prompt": "Issuing Country",
+                "prompt_schema": null,
+                "prompt_type": "basic"
+            },
+            "71156": {
+                "data_type": "TEXT",
+                "description": "",
+                "lines": [
+                    {
+                        "function_args": [],
+                        "function_id": 3184,
+                        "line_type": "UDF",
+                        "native_fn_name": null,
+                        "prompt": null
+                    }
+                ],
+                "model_type": "DEFAULT",
+                "name": "MRZ",
+                "position": 8,
+                "prompt": "",
+                "prompt_schema": null,
+                "prompt_type": "udf"
+            }
+        },
+        "name": "Passport"
+    },
+    "30995": {
+        "description": "",
+        "fields": {},
+        "name": "Other"
+    },
+    "last_edited_at": "1739256317000",
+    "last_edited_class_at": "1719467495000"
+}
