@@ -1,15 +1,13 @@
 name: Migrate to Target
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
     branches:
       - main
     paths-ignore:
-      - "README.md"
-      - "Contributing.md"
-      - ".github/**"
+      - README.md
+      - Contributing.md
+      - .github/**
   workflow_dispatch:
     inputs:
       branch:
@@ -21,7 +19,6 @@ jobs:
   migrate_to_target:
     name: Migration to Target
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     env:
       SOURCE_HOST_URL: ${{ secrets.SOURCE_HOST_URL }}
       SOURCE_TOKEN: ${{ secrets.SOURCE_TOKEN }}
@@ -32,7 +29,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch || github.event.pull_request.base.ref }}
+          ref: ${{ github.event.inputs.branch || 'main' }}
 
       - name: Install dependencies
         run: |
@@ -92,6 +89,10 @@ jobs:
             promote-build-solution --create_build_project $REBUILD_FLAG
           fi
 
+          PROJECT_ID=$(jq -r '.target.project_id' config.json)
+          echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
+          echo "Extracted Project ID: $PROJECT_ID"
+
       - name: Create App
         id: create_app_step
         run: |
@@ -142,19 +143,23 @@ jobs:
           git fetch --tags
           LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
           echo "Latest tag found: $LATEST_TAG"
+      
           if [ -z "$LATEST_TAG" ]; then
               echo "No previous version found. Deleting build..."
               promote-build-solution --delete_build
-          else
-              echo "Reverting to previous version: $LATEST_TAG"
-              curl -L -o latest_release.zip "https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${LATEST_TAG}.zip"
-              unzip -o latest_release.zip
-              EXTRACTED_FOLDER=$(ls -d ${GITHUB_REPOSITORY##*/}-*/ | head -n 1)
-              cd "$EXTRACTED_FOLDER"
-              REBUILD=$(jq -r '.settings.rebuild' config.json)
-              REBUILD_FLAG=""
-              if [ "$REBUILD" = "true" ]; then
-                REBUILD_FLAG="--rebuild"
-              fi
-              promote-build-solution --create_build_project $REBUILD_FLAG
+              exit 1
           fi
+      
+          echo "Reverting to previous version: $LATEST_TAG"
+          git reset --hard "$LATEST_TAG"
+          git clean -fd  
+      
+          REBUILD=$(jq -r '.settings.rebuild // "false"' config.json)
+          REBUILD_FLAG=""
+          if [ "$REBUILD" = "true" ]; then
+            REBUILD_FLAG="--rebuild"
+          fi
+      
+          jq --arg project_id "$PROJECT_ID" '.target.project_id = $project_id' config.json > config_updated.json && mv config_updated.json config.json
+          promote-build-solution --create_build_project $REBUILD_FLAG
+        
