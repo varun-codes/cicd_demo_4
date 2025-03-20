@@ -79,12 +79,17 @@ jobs:
           if [ -n "$DEPENDENCIES" ] && [ "$DEPENDENCIES" != "null" ]; then
             DEPS_FLAG="--upload_dependencies"
           fi
+          REBUILD=$(jq -r '.settings.rebuild' config.json)
+          REBUILD_FLAG=""
+          if [ "$REBUILD" = "true" ]; then
+            REBUILD_FLAG="--rebuild"
+          fi
           if [ "$IS_ADVANCED" = "true" ] && [ -n "$FLOW_PATH" ] && [ "$FLOW_PATH" != "null" ]; then
             promote-solution --promote_solution_to_target $DEPS_FLAG
           elif [ "$IS_ADVANCED" = "true" ] && [ -n "$SB_NAME" ] && [ "$SB_NAME" != "null" ]; then
             promote-sb-solution --promote_solution_to_target $DEPS_FLAG
           else
-            promote-build-solution --create_build_project
+            promote-build-solution --create_build_project $REBUILD_FLAG
           fi
 
       - name: Create App
@@ -141,10 +146,15 @@ jobs:
               echo "No previous version found. Deleting build..."
               promote-build-solution --delete_build
           else
-              echo "Reverting to latest version: $LATEST_TAG"
+              echo "Reverting to previous version: $LATEST_TAG"
               curl -L -o latest_release.zip "https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${LATEST_TAG}.zip"
               unzip -o latest_release.zip
               EXTRACTED_FOLDER=$(ls -d ${GITHUB_REPOSITORY##*/}-*/ | head -n 1)
               cd "$EXTRACTED_FOLDER"
-              promote-build-solution --create_build_project
+              REBUILD=$(jq -r '.settings.rebuild' config.json)
+              REBUILD_FLAG=""
+              if [ "$REBUILD" = "true" ]; then
+                REBUILD_FLAG="--rebuild"
+              fi
+              promote-build-solution --create_build_project $REBUILD_FLAG
           fi
