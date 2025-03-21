@@ -10,10 +10,7 @@ The CI/CD workflows streamline the deployment of AI Hub applications across diff
 ### 1. Prerequisites
 Before you begin, ensure you have the following:
 
-- Tokens for both the source and target Instabase environments with the following access:
-  - `manage_aihub` (Site permission / Manage AI Hub)
-  - `manage_marketplace_apps` (App permission / Marketplace Admin)
-  - `write_fs_aihub` (Site permission / Write Any Files to AI Hub Filesystem)
+- Tokens for both the source and target Instabase environments with access to the app and project.
 - Access to the Instabase public repository `aihub-apps-ci-cd-workflows`.
   - If you have access, you can clone the repository directly.
   - If you do not have access, you need to manually add the workflows and `.whl` files to your repository. You can obtain these files by raising a Zendesk ticket.
@@ -65,9 +62,7 @@ To enable the CI/CD workflow, configure the following secrets in your GitHub rep
   "settings": {
     "rebuild": true/false
   },
-  "testing": {
-    "regression": {}
-  },
+  "regression": {},
   "release_notes": "<Release Notes>"
 }
 ```
@@ -126,8 +121,6 @@ Modify the `config.json` file with your project details.
 1. Once your app is ready for migration, merge the feature branch into the `main` branch by creating a pull request (PR).
 2. Upon merging the PR, the CI/CD workflow will be triggered, and the app will be migrated to the target environment.
 
-⚠️ **Important:** The app will be migrated to the target environment based on the details in the feature branch, not the source environment. So, ensure the feature branch contains the latest project details before migration.
-
 ---
 
 ## Sample Configuration File
@@ -153,9 +146,7 @@ Modify the `config.json` file with your project details.
     "settings": {
         "rebuild": false
     },
-    "testing": {
-        "regression": {}
-    },
+    "regression": {},
     "release_notes": "Initial release v0.0.1 - changed some prompts"
 }
 ```
@@ -168,3 +159,22 @@ Raise a Zendesk ticket to obtain the workflows and `.whl` file from Instabase.
 
 ### What should we do if we want to migrate multiple apps?
 Each app should have its own separate repository since the `main` branch always contains the latest data for one app.
+
+### What should we do if we want to utilize only the version control feature of app building?
+If you want to utilize only the version control feature of app building, follow these steps:
+1. You will only need to add SOURCE_TOKEN and SOURCE_HOST_URL in the repository’s secret.
+2. Create a feature branch with the config.
+3. Keep making changes to the release notes in config and commit the changes.
+4. The workflows will fetch the latest code on each commit and add it to the repository.
+
+### What access controls are in place for users to migrate apps?
+The following access controls are in place for users to migrate apps:
+1. The tokens used must have access to both the source and target environment, including the organization and workspaces involved in the migration.
+2. Only the repository owner can add secrets to the repository.
+3. Migration can only be performed from the main branch and upon PR merge, allowing reviewers to be set up before merging.
+
+### What rollback mechanisms are in place in case of failures?
+There are three steps in the migration process, each with a potential point of failure:
+1. If build project creation fails: There is nothing to roll back, so no action is needed.
+2. If a build project is created or updated, but app creation fails: If the project was updated, the changes will be reverted. If the project was newly created, it will be deleted.
+3. If both the build project and app are created, but deployment fails: This is a limitation. You will need to manually create the deployment in the target environment, as no rollback will occur.
