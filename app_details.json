@@ -1,0 +1,25 @@
+{
+    "appReleaseVersion": "",
+    "author": "varun_nandan",
+    "contextAccount": "ib-internal",
+    "createdAtMs": "1744873285000",
+    "description": "Demo App v0.0.1",
+    "id": "7439bb48-b4fa-4090-9d88-f186bd97f096",
+    "isCustomizable": true,
+    "linkSharingMode": "OFF",
+    "metadata": "{\"authors\":[\"varun_nandan\"],\"billing_model\":\"default\",\"has_project_snapshot\":true,\"icon\":\"icon.png\",\"is_copy_of_existing_app\":false,\"org_context_type\":\"ENTERPRISE\",\"project_id\":\"0196428b-5554-7d29-9e0c-e08667d3ba47\",\"results\":\"\",\"samples\":\"output/s1_process_files\",\"schema\":\"schema.json\"}",
+    "name": "CICD Demo App",
+    "owner": "varun_nandan",
+    "ownerFullName": "Varun Nandan",
+    "sharedAccounts": [
+        "ib-internal"
+    ],
+    "solutionType": "EXTRACTION",
+    "solution_path": "system/global/fs/Instabase Drive/Applications/Deployed/All/7439bb48-b4fa-4090-9d88-f186bd97f096",
+    "state": "PRODUCTION",
+    "summary": "CICD Demo App",
+    "updateMode": "AUTO_UPDATE",
+    "updatedAtMs": "1744873300000",
+    "version": "0.0.1",
+    "visibility": "PRIVATE"
+}
