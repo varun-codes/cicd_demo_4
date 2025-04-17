@@ -1,0 +1,19 @@
+{
+  "source": {
+    "is_advanced": false, 
+    "project_id": "0196428b-5554-7d29-9e0c-e08667d3ba47",
+    "org": "ib-internal",
+    "workspace": "SolEng_workspace",
+    "app_id": "7439bb48-b4fa-4090-9d88-f186bd97f096",
+    "deployment_id": "0196428e-6349-795e-b5e5-d5f77c148b72"
+  },
+  "target": {
+    "org": "aihub-uat-internal",
+    "workspace": "SolEng_workspace"
+  },
+  "settings": {
+    "rebuild": true
+  },
+  "regression": {},
+  "release_notes": "Version 0.0.1"
+}
